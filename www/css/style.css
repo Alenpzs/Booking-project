@@ -1,0 +1,45 @@
+#bg-background{
+	/*background-color: rgba(234, 234, 234);*/
+}
+#product{
+	padding:5px;
+	clear:both;
+}
+
+#p_list{
+	width:220px;
+	max-width:225px;
+	padding:13px;
+	border:1px solid #9b9fa5;
+	float:left;
+	margin:25px;
+	box-shadow: 0 12px 4px 0 rgba(0,0,0,0.2);
+    transition: 0.2s;
+    width: 40%;
+    border-radius: 20px;
+    background-color: rgba(234, 234, 234);
+}
+
+#p_list img{
+	height:160px; 
+	width:190px;
+}
+
+#p_list:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+.left-side{
+	border: 1px solid #9b9fa5;
+	border-radius: 20px;
+}
+
+#aranzmani{
+	text-align: center;
+	letter-spacing: 2px;
+}
+.row{
+	border: 1px solid #9b9fa5;
+	border-radius: 20px;
+	background-color: rgba(234, 234, 234);
+	opacity: 0.85; 
+}

@@ -1,0 +1,49 @@
+[
+	
+	{	
+		"username": "bigbrother",
+		"password": "boss",
+		"type": 	"admin",
+		"name": 	"Big Boss",
+		"img": 		"http://isoulclub.ru/wp-content/uploads/2016/02/35647NZA.jpg"
+		
+	},
+	{	
+		"username": "komsijazoki",
+		"password": "123",
+		"type": 	"user",
+		"name": 	"Komsija Zoki",
+		"img": 		"https://steamuserimages-a.akamaihd.net/ugc/87097331331796023/B72E8283AF37579833F2A8186971959CD17203D4/"
+		
+	},
+	{	
+		"username": "perakojot",
+		"password": "123",
+		"type": 	"user",
+		"name": 	"Pera Koyot supergenije",
+		"img": 		"https://yt3.ggpht.com/a-/ACSszfEOm-LCCPSid6UqI51AmxOKWw_0Y8h-jql-TQ=s900-mo-c-c0xffffffff-rj-k-no"
+		
+	},
+	{	
+		"username": "duskodugousko",
+		"password": "123",
+		"type": 	"user",
+		"name": 	"Dusko Dugousko",
+		"img": 		"http://media.zuza.com/8/f/8f10ad63-55ae-452d-8f09-3e7e931788d6/B822048321Z.1_20150728071014_000_G1G1H6QSV.3_Gallery.jpg"
+		
+	},
+	{
+		"username": "patakdaca",
+		"password": "123",
+		"type": 	"user",
+		"name": 	"Patak Daca",
+		"img":		"https://res.cloudinary.com/teepublic/image/private/s--8LCk-CoN--/t_Preview/b_rgb:ffffff,c_limit,f_auto,h_313,q_90,w_313/v1498649556/production/designs/1698795_1"
+	},
+	{
+		"username": "pticatrkacica",
+		"password": "123",
+		"type": 	"user",
+		"name": 	"Ptica Trkacica",
+		"img":		"https://i.pinimg.com/originals/47/69/46/476946213ad909afb0135e4bb6a358d0.jpg"
+	}
+]

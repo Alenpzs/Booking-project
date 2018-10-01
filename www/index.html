@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang = "en">
+	<head>
+		<meta charset = "UTF-8" name = "viewport" content = "width=device-width, initial-scale=1" />
+		<link rel = "stylesheet" type = "text/css" href = "css/bootstrap.css"/>
+		<link rel = "stylesheet" type = "text/css" href = "css/style.css"/>
+		<title>HCI - Singidunum</title>
+	</head>
+	<body class="body"  ng-app="myModule" ng-controller="myCtrl as myController">
+	<div style = "padding-top:65px;">
+		<nav class = "navbar navbar-default navbar-fixed-top">
+			<div class = "container-fluid">
+				<ul class="nav navbar-nav navbar-right">
+					<li>						
+						<a href="#" ng-click="myController.filterKategorija('Hoteli')"
+							ng-class="{'aktivan':myController.kategorija=='Hoteli'}"
+							class="list-group-item">Hoteli</a>
+					</li>
+					<li>						
+						<a href="#" ng-click="myController.filterKategorija('Hosteli')"
+							ng-class="{'aktivan':myController.kategorija=='Hosteli'}"
+							class="list-group-item">Hosteli</a>
+					</li>
+					<li>						
+						<a href="#" ng-click="myController.filterKategorija('Apartmani')"
+							ng-class="{'aktivan':myController.kategorija=='Apartmani'}"
+							class="list-group-item">Apartmani</a>
+					</li>
+					<li ng-if="!(myController.korisnikPrijavljenUser || myController.korisnikPrijavljenAdmin)">
+						<a href="#" ng-click="myController.login()">Login</a>
+					</li>
+					<li ng-if="myController.korisnikPrijavljenUser || myController.korisnikPrijavljenAdmin">
+						<a href="#" ng-click="myController.korisnikPrijavljenUser = false; myController.korisnikPrijavljenAdmin = false; myController.logout()">Log out</a>
+					</li>
+					<li>
+						<div class="pull-right">
+							<form class="navbar-form" role="search">
+								<div class="input-group">
+									<input type="text" class="form-control" placeholder="Pretraga" ng-model="myController.searchText">
+										<div class="input-group-btn">
+											<button class="btn btn-default btn-search" type="submit" ng-click="myController.init()"><i class="glyphicon glyphicon-search"></i></button>
+										</div>
+								</div>
+							</form>
+						</div>
+					</li>
+					<li><a>{{myController.message}}</a></li>
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"> 
+							<span class="glyphicon glyphicon-shopping-cart"></span>Korpa<span class="caret"></span>
+						</a>
+						<ul class="dropdown-menu dropdown-cart" role="menu">
+							<div class = "panel-body table-responsive">
+								<table class = "table">
+									<thead>
+										<tr>
+											<th>Aranžmani</th>
+											<th>Cena</th>
+											<th></th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr ng-repeat = "cart in carts" ng-init = "setTotals(cart)">
+											<td>{{cart.naziv}}</td>
+											<td>{{cart.cena}}RSD</td>
+											<td>
+												<button type = "button" ng-click = "remove_cart(cart)" class = "btn btn-danger">
+													<span class = "glyphicon glyphicon-remove"></span>
+												</button>
+											</td>
+										</tr>
+										<tr>
+											<td align = "right">Ukupno</td>
+											<td>{{total}}RSD</td>
+										</tr>
+									</tbody>
+								</table>
+								<div style ="text-align: center; margin:0 auto;">
+									<button type = "button" ng-click = "myController.checkout()" class = "btn btn-success"><span class = "glyphicon glyphicon-ok-sign"></span>Kupi</button>
+								</div>
+							</div>
+						</ul>
+					</li>
+				</ul>
+			</div>
+		</nav>
+	</div>
+	
+	<div class = "col-md-2">
+		<div class="list-group">
+			<a href="#" ng-click="myController.init()" class="list-group-item">Svi aranžmani</a>
+			<a ng-repeat="el in [1, 2, 3, 4, 5]"
+				href="#" ng-click="myController.filterOcene(el)" class="list-group-item"
+				ng-class="{'aktivan':myController.ocena==el}">Ocena {{el}}
+				<span ng-if="myController.ocena==el" class="glyphicon glyphicon-ok-circle"></span>
+			</a>
+		</div>
+			<filter></filter>
+	</div>		
+		
+	<div class = "col-md-10">
+		<div id = "bg-background" class = "col-md-10">
+			<h4 id="aranzmani" >Ponuda aranžmana<h4>
+			<hr style = "border-top:1px groovy #ccc;">
+			<div id = "product"> <!--.slice((myController.currentPage)*myController.itemsPerPage),
+					 ((myController.currentPage)*myController.itemsPerPage))-->
+				<div id = "p_list" ng-repeat = "proizvod in myController.proizvodi.slice(((myController.currentPage-1)*myController.itemsPerPage), ((myController.currentPage)*myController.itemsPerPage))" ng-if="myController.proizvod==null">
+								<label><a href="#" ng-click="myController.selektujProizvod(proizvod)">{{proizvod.naziv}}</a> </label>
+									<p> </p>
+						<h4 style="display: inline;">Ocena: {{proizvod.ocena}}</h4>
+						<span ng-if="myController.korisnikPrijavljenUser || myController.korisnikPrijavljenAdmin">
+							<input style="width:20px;" ng-model="proizvod.ocena" type="number" min="1" max="5" />
+						</span>	
+						<center><img ng-src = "{{proizvod.img}}"/></center>
+						<h4 style="display: inline;">Za: {{proizvod.brojOsoba}} Osobe</h4> 
+						<span ng-if="myController.korisnikPrijavljenAdmin">
+							<input style="width:20px;" ng-model="proizvod.brojOsoba" type="number" min="1" max="4" />
+						</span>
+						<p></p>
+						<h4 style="display: inline;">&ensp;&ensp;&ensp;{{proizvod.brojDana}} nocenja</h4> 
+						<span ng-if="myController.korisnikPrijavljenAdmin">
+							<input style="width:20px;" ng-model="proizvod.brojDana" type="number" min="1" max="4" />
+						</span>
+						<p></p>
+						<h4 style="display: inline;">Broj ponuda na stanju: <strong>{{proizvod.kolicina}}</strong></h4>
+						<span ng-if="myController.korisnikPrijavljenAdmin">
+							<input style="width:20px;" ng-model="proizvod.kolicina" type="number" min="0" max="10" />
+						</span>
+						<p></p>
+						<div>
+							<label style="display: inline;">Cena: {{proizvod.cena}} RSD</label>
+							<span ng-if="myController.korisnikPrijavljenAdmin">
+								<input style="width:80px;" ng-model="proizvod.cena" type="number" min="1" max="50000"  />
+							</span>
+							<div>
+								<p ng-if="myController.korisnikPrijavljenAdmin">
+									<input style="width:150px;" ng-model="proizvod.naziv" type="text" />
+								</p>
+							</div>
+						</div>
+						<center><button type = "button" ng-click = "add_cart(proizvod)"><span class = "glyphicon glyphicon-shopping-cart"></span> Dodaj u korpu</button></center>
+				</div>
+			</div>
+			<div style="text-align:center;" ng-if="myController.proizvod==null">
+							<ul uib-pagination direction-links="true"
+								total-items="myController.totalItems"
+								ng-model="myController.currentPage"
+								max-size="myController.maxSize"
+								class="pagination-sm"
+								boundary-links="true"
+								num-pages="myController.smallnumPages">
+							</ul>
+						</div>
+				<div class="row" ng-if="myController.proizvod!=null">
+	        	<div class="col-sm-12">
+					<h2>{{ myController.proizvod.naziv }}</h2>
+					<h4> Lokacija: {{myController.proizvod.lokacija}} &ensp; &ensp; &ensp; &ensp; &ensp; Ocena: {{myController.proizvod.ocena}}  </h4>
+					
+		            <img src="{{myController.proizvod.img}}" style="width:403px; height:226px;" class="col-sm-6">
+					<div style="text align:right;">
+						<div class="col-sm-6">	
+							<h4> Bazen: {{myController.proizvod.bazen}} </h4>
+							<h4> Spa: {{myController.proizvod.spa}} </h4>
+							<h4> Privatni parking: {{myController.proizvod.parking}} </h4>
+							<h4> Klima: {{myController.proizvod.klima}} </h4>
+							<h4> WiFi Internet: {{myController.proizvod.WiFi}} </h4>
+							<h4> Pet Friendly: {{myController.proizvod.petfriendly}} </h4> <br>
+						</div> <br>
+						<h4 class="col-sm-12"> {{myController.proizvod.opis}} </h4><br>
+					</div>				            
+	        	</div>
+	      	</div>
+		</div>
+			<script src = "js/angular.js"></script>
+			<script src = "js/app.js"></script>
+			<script src="bower_components/jquery/dist/jquery.min.js"></script>
+			<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+			<script src="bower_components/angular/angular.min.js"></script>
+			<script src="bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>
+			<script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+			<!---LOGIN---->
+			<script type="text/ng-template" id="myModalContent.html">
+					<div class="modal-header">
+						<h3 class="modal-title" id="modal-title" ng-if="$ctrl.stanje == 'Login'">Login</h3>
+						<h3 class="modal-title" id="modal-title" ng-if="$ctrl.stanje == 'Registracija'">Registracija</h3>
+					</div>
+					<div class="modal-body" id="modal-body">
+						<section class="login-form" ng-if="$ctrl.stanje == 'Login'">
+								<form class="form-signin">
+										<input type="text" placeholder="Korisnicko ime" required
+											class="form-control input-lg" ng-model="$ctrl.username" />
+										<input type="password" class="form-control input-lg"
+											placeholder="Sifra" required ng-model="$ctrl.password" />
+										<button class="btn btn-lg btn-primary btn-block" ng-click="$ctrl.login()">Login</button>
+										<div>
+												<a href="#" ng-click="$ctrl.stanje='Registracija';">Registracija</a>
+										</div>
+								</form>
+						</section>
+						<section class="login-form" ng-if="$ctrl.stanje == 'Registracija'">
+								<form class="form-signin">
+										<input type="text" placeholder="Korisnicko ime" required
+											class="form-control input-lg" ng-model="$ctrl.username" />
+										<input type="password" class="form-control input-lg"
+											placeholder="Sifra" required ng-model="$ctrl.password" />
+										<input type="password" class="form-control input-lg"
+											placeholder="Potvrdite sifru" required ng-model="$ctrl.confirmPassword" />
+										<button class="btn btn-lg btn-primary btn-block" ng-click="$ctrl.register()">Registracija</button>
+										<div>
+												<a href="#" ng-click="$ctrl.stanje='Login';">Sign in</a>
+										</div>
+								</form>
+						</section>
+					</div>
+					<div class="modal-footer">
+							<button class="btn btn-warning" type="button" ng-click="$ctrl.cancel()">Cancel</button>
+					</div>
+			</script>
+			<!---/LOGIN--->
+	</div>
+</body>
+</html>
